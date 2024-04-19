@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --firts-color: #36190d;
+  --second-color: #ffa72f;
+  --third-color: #fff;
+  --gray-color: #f2f3f4;
+  --gray-dark-color: #373a3d;
+  --error-color: #ff2e37;
+  --success-color: #66b04c;
+}
+*,
+*:after,
+*::before {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Fredoka", sans-serif;
+}
