@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import "./styles/index.css";
-import Groups from "./utils/Groups.jsx";
-import GroupById from "./utils/GroupById.jsx";
+import Groups from "./views/Groups.jsx";
+import { LoginPage } from "./views/login.jsx";
 
 const router = createBrowserRouter([
   {
@@ -16,8 +16,8 @@ const router = createBrowserRouter([
     element: <Groups />,
   },
   {
-    path: "/groups/:id",
-    element: <GroupById />,
+    path: "/auth/login",
+    element: <LoginPage />,
   },
 ]);
 

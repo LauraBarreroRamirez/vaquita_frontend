@@ -1,4 +1,4 @@
-import Body from "./forms/Body";
+import Body from "../src/components/Body";
 
 function App() {
   return (

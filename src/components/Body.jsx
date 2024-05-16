@@ -1,7 +1,7 @@
 import logo from "../assets/Logo.svg";
 import perfil from "../assets/icons8-usuario-masculino-en-círculo-24.png";
 import { Link } from "react-router-dom";
-import Groups from "../utils/Groups";
+import Groups from "../views/Groups";
 
 function Body() {
   return (

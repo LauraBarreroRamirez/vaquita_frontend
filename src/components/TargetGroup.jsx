@@ -1,4 +1,5 @@
 import ImgGroup from "../assets/layer-MC1.svg";
+import PrincipalButton from "./buttons/PrincipalButton";
 
 function TargetGroup() {
   return (
@@ -31,35 +32,8 @@ function TargetGroup() {
             </div>
           </div>
           <div className="flex-row ">
-            <button
-              className="
-            rounded-md
-            bg-Color_primario 
-            text-white
-            mt-6
-            px-2
-            py-1
-            font-semibold 
-            text-xs
-            mr-2
-            "
-            >
-              Editar
-            </button>
-            <button
-              className="
-            rounded-md
-            bg-Color_primario 
-            text-white
-            mt-6
-            px-2
-            py-1
-            font-semibold 
-            text-xs
-            "
-            >
-              Eliminar
-            </button>
+            <PrincipalButton text="Editar" />
+            <PrincipalButton text="Borrar" />
           </div>
         </div>
       </section>
