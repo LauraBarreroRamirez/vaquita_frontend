@@ -1,52 +1,179 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PrincipalButton from "./buttons/PrincipalButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import { useGroups } from "../utils/GroupsContext.jsx";
 
-function Button() {
+function ButtonModal() {
   const [openModal, setOpenModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const { groups, setGroups } = useGroups();
+  const [colorGroup, setColorGroup] = useState("bg-orange");
+  const [colorInputError, setColorInputError] = useState(false);
+  const navigate = useNavigate();
+
+  const createdGroups = new Set(groups.map((group) => group.name));
+
+  const handleCreateGroup = (event) => {
+    event.preventDefault();
+
+    if (groupName.trim() === "") {
+      setErrorMessage("Elige un nombre para continuar");
+      setColorInputError(true);
+    } else if (groupName.length > 30) {
+      setErrorMessage(
+        "El nombre del grupo no puede tener más de 30 caracteres."
+      );
+      setColorInputError(true);
+    } else if (createdGroups.has(groupName)) {
+      setErrorMessage("El nombre del grupo ya existe.");
+    } else {
+      const newGroup = {
+        id: groups.length + 1,
+        color: colorGroup,
+        name: groupName,
+        createdAt: new Date(),
+      };
+
+      setGroups([...groups, newGroup]); // Agrega el nuevo grupo
+      setOpenModal(false); // Cierra el modal
+      setGroupName(""); // Limpia el campo de entrada
+      setErrorMessage(""); // Limpia el mensaje de error
+      setColorGroup(""); // Limpia el color seleccionado
+      setColorInputError(false); // Resetea el borde rojo
+      navigate("/groups", { state: { groups: newGroup } }); // Redirige a la ruta /grupos y pasa el estado de los grupos
+      createdGroups.add(groupName); // Agrega el nombre del nuevo grupo al Set
+    }
+  };
+
+  const handleColorSelect = (color) => {
+    setColorGroup(color); // Actualiza el color seleccionado
+  };
 
   return (
-    <>
-      <button
-        onClick={() => setOpenModal(true)}
-        className="
-            rounded-md
-            text-sm
-            bg-Color_primario 
-            text-white
-            mt-6
-            px-3
-            py-1
-            font-semibold 
-            align-content: flex-end
-            "
-      >
-        Nuevo grupo
-      </button>
+    <div className="">
+      <div className="mt-5 mr-2 flex justify-end ">
+        <PrincipalButton
+          onClick={() => setOpenModal(true)}
+          text="Nuevo Grupo"
+        />
+      </div>
+
       {openModal && (
         <>
-          <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-            <div className="bg-white p-5 rounded flex flex-col justify-center items-center gap-5">
-              <button onClick={() => setOpenModal(false)}>X</button>
-              <h3 className="font-semibold ">Nuevo grupo</h3>
-              <div>
-                <input
-                  className="shadow appearance-none border rounded w-full  text-black-700 leading-tight focus:outline-none focus:shadow-outline
-                  text-black"
-                  id="username"
-                  type="text"
-                  placeholder="Nombre del grupo"
-                />
+          <div className="border-2 fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center ">
+            <div className=" bg-white  pt-1 pr-6 pl-6 py-5 rounded-lg shadow-lg h-auto">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setOpenModal(false)}
+                  className="font-bold"
+                >
+                  x
+                </button>
               </div>
-              <div className="container border-2 border-gray-300 gap-5">
-                <button className="bg-red"></button>
-              </div>
-              <PrincipalButton text="Crear" />
+
+              <form onSubmit={handleCreateGroup}>
+                <div>
+                  <p
+                    className="text-lg font-semibold text-Color_primario"
+                    style={{ textAlign: "center" }}
+                  >
+                    Nuevo grupo
+                  </p>
+                </div>
+                <div className="flex items-center space-x-2 py-5">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      className={`w-full pl-4 pr-10 py-2 border-2 ${
+                        colorInputError
+                          ? "border-rose-600/100"
+                          : "border-gray-300"
+                      } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+                      placeholder="Nombre del grupo"
+                      value={groupName}
+                      onChange={(e) => {
+                        setGroupName(e.target.value); // Actualizar el estado del campo de entrada
+                        setColorInputError(false); // Resetea el borde rojo cuando el usuario empieza a escribir
+                        setErrorMessage(""); // Limpia el mensaje de error si el usuario empieza a escribir
+                      }}
+                    />
+                    <FontAwesomeIcon
+                      icon={faUsers}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    />
+                  </div>
+                </div>
+
+                <div className=" mx-auto">
+                  <div className="grid grid-cols-4 gap-4 w-64 h-32 rounded-md border-2 p-3">
+                    <button
+                      type="button"
+                      className=" bg-orange rounded-md"
+                      onClick={() => handleColorSelect("bg-orange")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-green500 rounded-md"
+                      onClick={() => handleColorSelect("bg-green500")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-sky600 rounded-md"
+                      onClick={() => handleColorSelect("bg-sky600")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-rose800 rounded-md"
+                      onClick={() => handleColorSelect("bg-rose800")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-violet900 rounded-md"
+                      onClick={() => handleColorSelect("bg-violet900")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-indigo300 rounded-md"
+                      onClick={() => handleColorSelect("bg-indigo300")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-pink300 rounded-md"
+                      onClick={() => handleColorSelect("bg-pink300")}
+                    ></button>
+                    <button
+                      type="button"
+                      className="bg-zinc800 rounded-md"
+                      onClick={() => handleColorSelect("bg-zinc800")}
+                    ></button>
+                  </div>
+                </div>
+                <div className="pt-3">
+                  <PrincipalButton
+                    text="Crear"
+                    width="100%"
+                    height="30px"
+                    type="submit"
+                    // onClick={() => {
+                    //   return createGroups();
+                    // }}
+                  />
+                </div>
+                {errorMessage && (
+                  <p className="text-left mt-4 font-bold text-xs	text-Color_errores">
+                    {errorMessage}
+                  </p>
+                )}
+              </form>
             </div>
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
 
-export default Button;
+export default ButtonModal;

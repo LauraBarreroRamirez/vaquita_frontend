@@ -1,9 +1,9 @@
-import Body from "../src/components/Body";
+import Header from "../src/components/Header";
 
 function App() {
   return (
     <>
-      <Body />
+      <Header />
     </>
   );
 }
