@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import TargetGroup from "./TargetGroup";
 import { useGroups } from "../utils/GroupsContext";
 import PrincipalButton from "./buttons/PrincipalButton";
 import { useNavigate } from "react-router-dom";
-import { allGroups } from "../api/groups";
+import { allGroups } from "../api/groups.jsx";
+import LogoutButton from "../utils/providers/auth/Logout.jsx";
 
 function Body() {
   const { groups: contextGroups, setGroups: setContextGroups } = useGroups();
@@ -23,9 +24,9 @@ function Body() {
     loadGroups();
   }, []);
 
-  const sortedGroups = [...groups].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  const sortedGroups = useMemo(() => {
+    return [...groups].sort((a, b) => b.id - a.id);
+  }, [groups]);
 
   const handleEditClick = (name) => {
     navigate(`/group/${name}`);
@@ -69,6 +70,9 @@ function Body() {
             ))}
           </ul>
         )}
+        <div>
+          <LogoutButton />
+        </div>
       </div>
     </>
   );

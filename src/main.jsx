@@ -10,42 +10,74 @@ import GroupDetail from "./views/groups/GroupDetail.jsx";
 import { LoginPage } from "./views/login.jsx";
 import { GroupsProvider } from "./utils/GroupsContext.jsx";
 import Registration from "./views/Registration.jsx";
+import AuthProvider from "./utils/providers/auth/AuthProvider.jsx";
+import AuthGuard from "./guards/AuthGuard.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/inicio",
-    element: <App />,
+    element: (
+      <AuthGuard>
+        <App />
+      </AuthGuard>
+    ),
   },
   {
     path: "/groups",
-    element: <Groups />,
+    element: (
+      <AuthGuard>
+        <GroupsProvider>
+          <Groups />
+        </GroupsProvider>
+      </AuthGuard>
+    ),
   },
   {
     path: "/",
-    element: <LoginPage />,
+    element: (
+      <AuthGuard>
+        <LoginPage />
+      </AuthGuard>
+    ),
   },
   {
     path: "/friends",
-    element: <Friends />,
+    element: (
+      <AuthGuard>
+        <Friends />
+      </AuthGuard>
+    ),
   },
   {
     path: "/expenses",
-    element: <Expenses />,
+    element: (
+      <AuthGuard>
+        <Expenses />
+      </AuthGuard>
+    ),
   },
   {
     path: "/group/:id",
-    element: <GroupDetail />,
+    element: (
+      <AuthGuard>
+        <GroupDetail />
+      </AuthGuard>
+    ),
   },
   {
     path: "/registro",
-    element: <Registration />,
+    element: (
+      <AuthGuard>
+        <Registration />
+      </AuthGuard>
+    ),
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GroupsProvider>
+    <AuthProvider>
       <RouterProvider router={router} />
-    </GroupsProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

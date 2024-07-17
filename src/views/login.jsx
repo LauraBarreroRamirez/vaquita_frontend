@@ -4,12 +4,20 @@ import { useNavigate } from "react-router-dom";
 import LogoVaqui from "../assets/Logo decoration.svg";
 import PrincipalButton from "../components/buttons/PrincipalButton.jsx";
 import Registration from "./Registration.jsx";
-import { login } from "../api/auth.jsx";
+import { loginApi } from "../api/auth.jsx";
 import apiClient from "../api/apiCLiente.jsx";
+import useAuthContext from "../utils/providers/auth/useAuthContext.jsx";
 
 export function LoginPage() {
+  const { isAuthenticated, login } = useAuthContext();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/inicio");
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <>
@@ -48,11 +56,7 @@ export function LoginPage() {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                   try {
-                    const token = await login(values);
-                    apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-                    console.log("hola");
-                    localStorage.setItem("authToken", token);
-                    navigate("/inicio");
+                    await login(values);
                   } catch (error) {
                     setErrorMessage(
                       "Error al iniciar sesión. Verifica tus credenciales."

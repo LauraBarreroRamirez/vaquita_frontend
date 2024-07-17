@@ -49,7 +49,7 @@ function Registration() {
                 onSubmit={async (values, { setSubmitting }) => {
                   try {
                     const response = await fetch(
-                      "http://localhost:3000/users/",
+                      "http://localhost:3001/users/",
                       {
                         method: "POST",
                         body: JSON.stringify(values),

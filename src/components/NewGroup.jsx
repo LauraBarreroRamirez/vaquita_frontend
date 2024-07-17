@@ -4,6 +4,8 @@ import PrincipalButton from "./buttons/PrincipalButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { useGroups } from "../utils/GroupsContext.jsx";
+import { createGroups } from "../api/groups.jsx";
+import useAuthContext from "../utils/providers/auth/useAuthContext.jsx";
 
 function ButtonModal() {
   const [openModal, setOpenModal] = useState(false);
@@ -16,7 +18,9 @@ function ButtonModal() {
 
   const createdGroups = new Set(groups.map((group) => group.name));
 
-  const handleCreateGroup = (event) => {
+  const { user } = useAuthContext();
+
+  const handleCreateGroup = async (event) => {
     event.preventDefault();
 
     if (groupName.trim() === "") {
@@ -29,22 +33,33 @@ function ButtonModal() {
       setColorInputError(true);
     } else if (createdGroups.has(groupName)) {
       setErrorMessage("El nombre del grupo ya existe.");
-    } else {
-      const newGroup = {
-        id: groups.length + 1,
+      return;
+    }
+    try {
+      console.log("user.id", user.id);
+      const newGroupData = {
         color: colorGroup,
         name: groupName,
         createdAt: new Date(),
+        ownerUserId: user.id,
       };
 
-      setGroups([...groups, newGroup]); // Agrega el nuevo grupo
+      const { data } = await createGroups(newGroupData);
+
+      setGroups([...groups, data]); // Agrega el nuevo grupo
       setOpenModal(false); // Cierra el modal
       setGroupName(""); // Limpia el campo de entrada
       setErrorMessage(""); // Limpia el mensaje de error
       setColorGroup(""); // Limpia el color seleccionado
       setColorInputError(false); // Resetea el borde rojo
-      navigate("/groups", { state: { groups: newGroup } }); // Redirige a la ruta /grupos y pasa el estado de los grupos
+      navigate("/groups", { state: { groups: { groups: data } } }); // Redirige a la ruta /grupos y pasa el estado de los grupos
       createdGroups.add(groupName); // Agrega el nombre del nuevo grupo al Set
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    } catch (error) {
+      console.error("Error al crear el grupo:", error);
+      // Manejar el error como sea necesario
     }
   };
 
@@ -70,7 +85,7 @@ function ButtonModal() {
                   onClick={() => setOpenModal(false)}
                   className="font-bold"
                 >
-                  x
+                  ×
                 </button>
               </div>
 
